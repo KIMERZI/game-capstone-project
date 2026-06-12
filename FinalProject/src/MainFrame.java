@@ -37,7 +37,7 @@ public class MainFrame extends GameFrame {
 	TextBox start_tb;
 	TextBox end_tb;
 	
-	int init_target_number;
+	int init_target_number; //초기 타겟 수
 	double shoot_rate; // 타겟 히트박스 크기
 	double fail_rate; // 실패 시 히트박스
 	
@@ -179,11 +179,16 @@ public class MainFrame extends GameFrame {
 	private void UserSetting() { us = new User(); }
 
 	private void TargetSetting() {
-		for(int i = 0 ; i < init_target_number ; i++) {
-		    Target tg = new Target();
-		    if(i == 0) tg.isChaser = true;
-		    targets.add(tg);
-		}
+	    targets = new ArrayList<>();
+	    init_target_number = 2;
+	    
+	    for(int i = 0 ; i < init_target_number ; i++) {
+	        Target tg = new Target();
+
+	        if(i == 0) tg.isChaser = true;
+
+	        targets.add(tg);
+	    }
 	}
 	
 	private void ETCSetting() {
@@ -332,6 +337,7 @@ public class MainFrame extends GameFrame {
 	    //c를 통해 치트모드
 	    if (inputs.buttons[4].IsPressedNow()) {
 	        targets.clear();
+	        Target.ResetTarget();
 	    }
 	    
 	    //우클릭으로 총 발사
@@ -488,10 +494,12 @@ public class MainFrame extends GameFrame {
 		dir_y = init_dir_y;
 
 		targets.clear();
-
+		Target.ResetTarget();
+		
 		for(int i = 0; i < init_target_number; i++) {
 			targets.add(new Target());
 		}
+
 	}
 
 
@@ -675,9 +683,12 @@ public class MainFrame extends GameFrame {
 	    g.fillOval((int)(pos_x * settings.canvas_height/40) - user_size/2, (int)(pos_y * settings.canvas_height/40) - user_size/2, user_size, user_size);
 	    
 	    int target_size = 15;
-	    SetColor(Color.RED);
-	    for(Target tg : targets)
+
+	    for(Target tg : targets) {
+	    	if(tg.getIsChaser()) SetColor(Color.GREEN);
+	    	else SetColor(Color.RED);
 	    	g.fillOval((int)(tg.target_pos_x * settings.canvas_height/40) - target_size/2, (int)(tg.target_pos_y * settings.canvas_height/40) - target_size/2, target_size, target_size);
+	    }
 	}
 	        
 
@@ -705,7 +716,8 @@ public class MainFrame extends GameFrame {
 	 */
 	private class User extends DrawableObject{
 		
-		TextBox user_tb;
+		private TextBox user_tb;
+		
 		public User() {
 			user_tb = new TextBox();
 
@@ -740,15 +752,15 @@ public class MainFrame extends GameFrame {
 		
 		static int target_num = 0;
 		
-		int num;
-		double target_pos_x;
-		double target_pos_y;
-		double target_speed;
-		boolean is_shoot;
-		long shoot_time;
-		int moveType;
-		int currentWaypoint;
-		boolean isChaser;
+		private int num;
+		private double target_pos_x;
+		private double target_pos_y;
+		private double target_speed;
+		private boolean is_shoot;
+		private long shoot_time;
+		private int moveType;
+		private int currentWaypoint;
+		private boolean isChaser;
 		
 		
 		public Target() {
@@ -758,26 +770,16 @@ public class MainFrame extends GameFrame {
 		    shoot_time = 0;
 		    num = target_num;
 		    target_num++;
+		    if(num == 0) isChaser = true;
 		    moveType = (int)(Math.random() * 5);
 		    currentWaypoint = (int)(Math.random() * GetPath(moveType).length);
 		}
-		
-		double[][] path0 = {{2,2}, {8,2}, {8,8}, {2,8}};
-		double[][] path1 = {{5,1}, {8,5}, {5,8}, {1,5}};
-		double[][] path2 = {{2,5}, {5,2}, {8,5}, {5,8}};
-		double[][] path3 = {{2,2}, {5,2}, {8,2}, {8,8}, {5,8}, {2,8}};
-		double[][] path4 = {{2,2}, {8,2}, {2,8}, {8,8}};
-		double[][] path5 = {{1,1}, {1,8}, {8,8}, {8,1}};
-		double[][] path6 = {{3,3}, {7,3}, {7,7}, {3,7}};
-		double[][] path7 = {{2,5}, {4,2}, {6,8}, {8,5}}; 
-		double[][] path8 = {{5,2}, {7,3}, {8,5}, {7,7},{5,8}, {3,7}, {2,5}, {3,3}};
-		double[][] path9 = {{2,2}, {8,2}, {5,5},{2,8}, {8,8}, {5,5}};
 		
 		@Override
 		public void Draw(Graphics2D g) {
 			Image img;
 			
-			img = is_shoot
+			img = !is_shoot
 			? images.GetImage("target")
 			: images.GetImage("shoot_target");
 			
@@ -815,6 +817,11 @@ public class MainFrame extends GameFrame {
 		    return Math.sqrt(dx * dx + dy * dy);
 		}
 		
+		public static void ResetTarget() { target_num = 0; }
+		
+		public boolean getIsChaser() {
+			return isChaser;
+		}
 		private void SetTargetPosition() {
 			target_pos_x = 8 * Math.random()+1;
 			target_pos_y = 8 * Math.random()+1;
@@ -921,19 +928,14 @@ public class MainFrame extends GameFrame {
 	private double[][] GetPath(int moveType){
 
 	    switch(moveType){
-
 	        case 0:
 	            return path0;
-
 	        case 1:
 	            return path1;
-
 	        case 2:
 	            return path2;
-
 	        case 3:
 	            return path3;
-
 	        default:
 	            return path4;
 	    }
