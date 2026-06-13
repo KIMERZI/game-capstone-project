@@ -102,59 +102,11 @@ public class MainFrame extends GameFrame {
 	
 	
 	/*
-	 *Initialize 관련 메서드들
+	 * Initialize 관련 메서드들
 	 * ===================================================================
 	 */
 	
 	private void StateSetting() { state = 0;}
-
-	private void LayerSetting() {
-		layer_start = new Layer(0, 0, settings.canvas_width, settings.canvas_height);
-		BgImage start_bg = new BgImage("layer_start");
-		layer_start.children.add(start_bg);
-		
-		start_tb = new TextBox();
-		start_tb.width = 500;
-		start_tb.height = 50;
-		start_tb.x = settings.canvas_width / 2 - 250;
-		start_tb.y = settings.canvas_height - 150;
-		start_tb.text = "Press SPACE to Start";
-		start_tb.font = new Font("Arial", Font.BOLD, 40);
-		start_tb.foreground_color = Color.WHITE;
-		start_tb.background_color = new Color(0,0,0,0);
-		
-		title_tb = new TextBox();
-		title_tb.width = 1000;
-		title_tb.height = 150;
-		title_tb.x = settings.canvas_width / 2 - 500;
-		title_tb.y = settings.canvas_height / 3;
-		title_tb.text = "Ghost Runner";
-		title_tb.font = new Font("Arial", Font.BOLD, 80);
-		title_tb.foreground_color = Color.WHITE;
-		title_tb.background_color = new Color(0, 0, 0, 0);
-		title_tb.margin_left = 0;
-		
-		layer_end = new Layer(0, 0, settings.canvas_width, settings.canvas_height);
-		layer_end.trigger_hide = true; 
-		BgImage end_bg = new BgImage("layer_end");
-		layer_end.children.add(end_bg);
-		
-		end_tb = new TextBox();
-		end_tb.width = 900;
-		end_tb.height = 100;
-		end_tb.x = settings.canvas_width / 2 - 450;
-		end_tb.y = settings.canvas_height - 180;
-		end_tb.text = "SPACE : Restart    ESC : Exit";
-		end_tb.font = new Font("Arial", Font.BOLD, 35);
-		end_tb.foreground_color = Color.WHITE;
-		end_tb.background_color = new Color(0,0,0,0);
-		
-		layer_pause = new Layer(0, 0, settings.canvas_width, settings.canvas_height);
-		layer_pause.trigger_hide = true; 
-		
-		layer_minimap = new Layer(0, 0, settings.canvas_height / 4, settings.canvas_height / 4);
-		
-	}
 	
 	private void inputsSetting() {
 	    
@@ -173,7 +125,58 @@ public class MainFrame extends GameFrame {
 	    images.LoadImage("Images/layer_start.png","layer_start");
 	    images.LoadImage("Images/layer_end.png","layer_end");
 	    images.LoadImage("Images/layer_pause.png","layer_pause");
-	    
+	    images.LoadImage("Images/IMG_1042.png","lee1");
+	    images.LoadImage("Images/IMG_1043.png","lee2");
+	    images.LoadImage("Images/lee_start.png","lee_start");
+	    images.LoadImage("Images/lee_end.png","lee_end");
+	}
+	
+	private void LayerSetting() {
+		layer_start = new Layer(0, 0, settings.canvas_width, settings.canvas_height);
+		BgImage start_bg = new BgImage("lee_start");
+		layer_start.children.add(start_bg);
+		
+		start_tb = new TextBox();
+		start_tb.width = 500;
+		start_tb.height = 50;
+		start_tb.x = settings.canvas_width / 2 - 250;
+		start_tb.y = settings.canvas_height - 150;
+		start_tb.text = "Press SPACE to Start";
+		start_tb.font = new Font("Arial", Font.BOLD, 40);
+		start_tb.foreground_color = Color.WHITE;
+		start_tb.background_color = new Color(0,0,0,0);
+		
+		title_tb = new TextBox();
+		title_tb.width = 1000;
+		title_tb.height = 150;
+		title_tb.x = settings.canvas_width / 2 - 500;
+		title_tb.y = settings.canvas_height / 3;
+		title_tb.text = "아임이진한";
+		title_tb.font = new Font("Arial", Font.BOLD, 80);
+		title_tb.foreground_color = Color.WHITE;
+		title_tb.background_color = new Color(0, 0, 0, 0);
+		title_tb.margin_left = 0;
+		
+		layer_end = new Layer(0, 0, settings.canvas_width, settings.canvas_height);
+		layer_end.trigger_hide = true; 
+		BgImage end_bg = new BgImage("lee_end");
+		layer_end.children.add(end_bg);
+		
+		end_tb = new TextBox();
+		end_tb.width = 900;
+		end_tb.height = 100;
+		end_tb.x = settings.canvas_width / 2 - 450;
+		end_tb.y = settings.canvas_height - 180;
+		end_tb.text = "SPACE : Restart    ESC : Exit";
+		end_tb.font = new Font("Arial", Font.BOLD, 35);
+		end_tb.foreground_color = Color.WHITE;
+		end_tb.background_color = new Color(0,0,0,0);
+		
+		layer_pause = new Layer(0, 0, settings.canvas_width, settings.canvas_height);
+		layer_pause.trigger_hide = true; 
+		
+		layer_minimap = new Layer(0, 0, settings.canvas_height / 4, settings.canvas_height / 4);
+		
 	}
 	
 	private void UserSetting() { us = new User(); }
@@ -254,7 +257,6 @@ public class MainFrame extends GameFrame {
 	
 	/**
 	 * 키 입력을 초기화.
-	 * 가끔 wasd 키가 계속 입력될 때가 있음..
 	 */
 	private void ResetInputs() {
 		if(!canvas.hasFocus()) {
@@ -475,7 +477,7 @@ public class MainFrame extends GameFrame {
 	}
 	
 	/**
-	 * 게임을 재시작할 때 타겟을 초기화시킴.
+	 * 게임을 재시작할 때 타겟을 초기화시키는 메서드
 	 */
 	private void ResetSetting() {
 
@@ -580,6 +582,7 @@ public class MainFrame extends GameFrame {
 			int map_x = (int) pos_x;
 	        int map_y = (int) pos_y;
 	            
+	        //광선벡터
 	        double ray_dir_x = dir_x + plane_x * ( 2.0 * i / settings.canvas_width - 1.0 );
 	        double ray_dir_y = dir_y + plane_y * ( 2.0 * i / settings.canvas_width - 1.0 );
 			
@@ -660,9 +663,6 @@ public class MainFrame extends GameFrame {
 	/**
 	 * 미니맵을 그려주는 메서드
 	 */
-	/*
-	 * TODO double로는못그리나...?
-	 */
 	private void DrawMiniMap() {
 	    for(int y = 0; y < map.length; y++) {
 	        for(int x = 0; x < map[0].length; x++) {
@@ -679,7 +679,6 @@ public class MainFrame extends GameFrame {
 	    int user_size = 20;
 	    SetColor(Color.BLUE);
 	    
-	    //TODO double 형태를 좀 더 온전히 받을 수 있게 수정하기.. 순간이동하네
 	    g.fillOval((int)(pos_x * settings.canvas_height/40) - user_size/2, (int)(pos_y * settings.canvas_height/40) - user_size/2, user_size, user_size);
 	    
 	    int target_size = 15;
@@ -780,8 +779,8 @@ public class MainFrame extends GameFrame {
 			Image img;
 			
 			img = !is_shoot
-			? images.GetImage("target")
-			: images.GetImage("shoot_target");
+			? images.GetImage("lee1")
+			: images.GetImage("lee2");
 			
 			double sprite_x = target_pos_x - pos_x;
 			double sprite_y = target_pos_y - pos_y;
@@ -888,7 +887,6 @@ public class MainFrame extends GameFrame {
 
 	    if(best_target != null && best_target.is_shoot == false) {
 	        best_target.is_shoot = true;
-	        //best_target.HP -= 1;
 	        System.out.println("HIT "+best_target.num);
 	        
 	    } else System.out.println("MISS");
@@ -926,7 +924,6 @@ public class MainFrame extends GameFrame {
 	}
 	
 	private double[][] GetPath(int moveType){
-
 	    switch(moveType){
 	        case 0:
 	            return path0;

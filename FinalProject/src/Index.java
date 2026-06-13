@@ -6,7 +6,7 @@ public class Index {
 		// TODO Auto-generated method stub
     	GameFrameSettings settings = new GameFrameSettings();
     	
-    	settings.window_title = "Ghost Runner";
+    	settings.window_title = "우울진한";
     	settings.canvas_height = 1000;
     	settings.canvas_width = 1600;
     	settings.numberOfButtons = 8;
